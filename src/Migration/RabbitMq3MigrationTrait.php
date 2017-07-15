@@ -7,10 +7,6 @@ use GuzzleHttp\Exception\RequestException;
 
 trait RabbitMq3MigrationTrait
 {
-    const WAITING_SUFFIX = '.waiting';
-    const UNROUTED_SUFFIX = '.unrouted';
-    const REPUB_SUFFIX = '.repub';
-
     use MigrationTrait;
 
     private function createMigrationList(string $exchange): void
@@ -20,11 +16,11 @@ trait RabbitMq3MigrationTrait
 
     private function createMessagePipeline(string $exchange, int $repubInterval = 30000): void
     {
-        $waitExchange = $exchange.self::WAITING_SUFFIX;
+        $waitExchange = $exchange.'.waiting';
         $waitQueue = $waitExchange;
-        $unroutedExchange = $exchange.self::UNROUTED_SUFFIX;
+        $unroutedExchange = $exchange.'.unrouted';
         $unroutedQueue = $unroutedExchange;
-        $repubExchange = $exchange.self::REPUB_SUFFIX;
+        $repubExchange = $exchange.'.repub';
         $repubQueue = $repubExchange;
 
         // Setup the default exchange and queue pipelines
@@ -51,11 +47,11 @@ trait RabbitMq3MigrationTrait
 
     private function deleteMessagePipeline(string $exchange): void
     {
-        $waitExchange = $exchange.self::WAITING_SUFFIX;
+        $waitExchange = $exchange.'.waiting';
         $waitQueue = $waitExchange;
-        $unroutedExchange = $exchange.self::UNROUTED_SUFFIX;
+        $unroutedExchange = $exchange.'.unrouted';
         $unroutedQueue = $unroutedExchange;
-        $repubExchange = $exchange.self::REPUB_SUFFIX;
+        $repubExchange = $exchange.'.repub';
         $repubQueue = $repubExchange;
 
         $this->deleteShovel($repubExchange);
