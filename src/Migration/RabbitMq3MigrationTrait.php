@@ -7,6 +7,10 @@ use GuzzleHttp\Exception\RequestException;
 
 trait RabbitMq3MigrationTrait
 {
+    const WAITING_SUFFIX = '.waiting';
+    const UNROUTED_SUFFIX = '.unrouted';
+    const REPUB_SUFFIX = '.repub';
+
     use MigrationTrait;
 
     private function createMigrationList(string $exchange): void
@@ -16,18 +20,18 @@ trait RabbitMq3MigrationTrait
 
     private function createMessagePipeline(string $exchange, int $repubInterval = 30000): void
     {
-        $waitExchange = $exchange.'.waiting';
-        $waitQueue = $waitExchange.'.q';
-        $unroutedExchange = $exchange.'.unrouted';
-        $unroutedQueue = $unroutedExchange.'.q';
-        $repubExchange = $exchange.'.repub';
-        $repubQueue = $repubExchange.'.q';
+        $waitExchange = $exchange.self::WAITING_SUFFIX;
+        $waitQueue = $waitExchange;
+        $unroutedExchange = $exchange.self::UNROUTED_SUFFIX;
+        $unroutedQueue = $unroutedExchange;
+        $repubExchange = $exchange.self::REPUB_SUFFIX;
+        $repubQueue = $repubExchange;
 
         // Setup the default exchange and queue pipelines
         $this->declareExchange($unroutedExchange, 'fanout', false, true, false, true); //internal
         $this->declareExchange($repubExchange, 'fanout', false, true, false, true); //internal
         $this->declareExchange($waitExchange, 'fanout', false, true, false);
-        $this->declareExchange($exchange, 'direct', false, true, false, false, false, [
+        $this->declareExchange($exchange, 'topic', false, true, false, false, false, [
             'alternate-exchange' => $unroutedExchange
         ]);
         $this->declareQueue($waitQueue, false, true, false, false, false, [
@@ -47,12 +51,13 @@ trait RabbitMq3MigrationTrait
 
     private function deleteMessagePipeline(string $exchange): void
     {
-        $waitExchange = $exchange.'.waiting';
-        $waitQueue = $waitExchange.'.q';
-        $unroutedExchange = $exchange.'.unrouted';
-        $unroutedQueue = $unroutedExchange.'.q';
-        $repubExchange = $exchange.'.repub';
-        $repubQueue = $repubExchange.'.q';
+        $waitExchange = $exchange.self::WAITING_SUFFIX;
+        $waitQueue = $waitExchange;
+        $unroutedExchange = $exchange.self::UNROUTED_SUFFIX;
+        $unroutedQueue = $unroutedExchange;
+        $repubExchange = $exchange.self::REPUB_SUFFIX;
+        $repubQueue = $repubExchange;
+
         $this->deleteShovel($repubExchange);
         $this->deleteExchange($waitExchange);
         $this->deleteExchange($unroutedExchange);
@@ -81,6 +86,23 @@ trait RabbitMq3MigrationTrait
                 'durable' => $durable,
                 'auto_delete' => $autoDelete,
                 'internal' => $internal,
+                'nowait' => $noWait,
+                'arguments' => $arguments
+            ])
+        ]);
+    }
+
+    private function bindExchange(
+        string $source,
+        string $dest,
+        string $routingKey = '',
+        bool $noWait = false,
+        array $arguments = []
+    ): void {
+        $uri = sprintf('/api/bindings/%s/e/%s/e/%s', $this->getVhost(), $source, $dest);
+        $this->connector->getConnection()->post($uri, [
+            'body' => json_encode([
+                'routing_key' => $routingKey,
                 'nowait' => $noWait,
                 'arguments' => $arguments
             ])
