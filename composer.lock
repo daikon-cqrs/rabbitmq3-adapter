@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "4b157315259d42244d709321a48dce17",
+    "content-hash": "92240cf60f3cd0d5ccc14c18e585c2f7",
     "packages": [
         {
             "name": "beberlei/assert",
@@ -60,6 +60,52 @@
                 "validation"
             ],
             "time": "2017-05-04T02:00:24+00:00"
+        },
+        {
+            "name": "daikon/async-job",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/daikon-cqrs/async-job.git",
+                "reference": "7fbfc7b117a9f144e0acfd5128c83460fd7bfb37"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/daikon-cqrs/async-job/zipball/7fbfc7b117a9f144e0acfd5128c83460fd7bfb37",
+                "reference": "7fbfc7b117a9f144e0acfd5128c83460fd7bfb37",
+                "shasum": ""
+            },
+            "require": {
+                "beberlei/assert": "^2.7",
+                "daikon/data-structure": "master@dev",
+                "daikon/message-bus": "master@dev",
+                "php": ">=7.1"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^6.2",
+                "satooshi/php-coveralls": "master@dev",
+                "squizlabs/php_codesniffer": "^3.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Daikon\\AsyncJob\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MPL-2.0"
+            ],
+            "description": "Asynchronous job components for Daikon projects.",
+            "homepage": "https://github.com/daikon-cqrs/async-job",
+            "keywords": [
+                "asynchronous",
+                "background",
+                "delayed",
+                "job",
+                "worker"
+            ],
+            "time": "2017-07-15 23:57:35"
         },
         {
             "name": "daikon/data-structure",
@@ -1577,7 +1623,7 @@
                 "github",
                 "test"
             ],
-            "time": "2017-03-31T10:12:47+00:00"
+            "time": "2017-03-31 10:12:47"
         },
         {
             "name": "sebastian/code-unit-reverse-lookup",
@@ -1738,7 +1784,7 @@
             "keywords": [
                 "diff"
             ],
-            "time": "2017-07-13T02:44:20+00:00"
+            "time": "2017-07-13 02:44:20"
         },
         {
             "name": "sebastian/environment",
@@ -2682,6 +2728,7 @@
     "aliases": [],
     "minimum-stability": "dev",
     "stability-flags": {
+        "daikon/async-job": 20,
         "daikon/dbal": 20,
         "daikon/message-bus": 20,
         "satooshi/php-coveralls": 20

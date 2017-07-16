@@ -24,8 +24,8 @@ final class RabbitMq3Transport implements TransportInterface
     public function send(EnvelopeInterface $envelope, MessageBusInterface $messageBus): bool
     {
         $metadata = $envelope->getMetadata();
-        $exchange = $metadata->get('_exchange');
-        $routingKey = $metadata->get('_routing_key', $metadata->get('_aggregate_alias', ''));
+        $exchange = $metadata->get('exchange');
+        $routingKey = $metadata->get('routing_key', $metadata->get('_aggregate_alias', ''));
 
         Assertion::notBlank($exchange);
         Assertion::string($routingKey);
