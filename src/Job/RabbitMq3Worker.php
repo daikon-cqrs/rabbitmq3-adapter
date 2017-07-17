@@ -1,12 +1,15 @@
 <?php
 
-namespace Daikon\RabbitMq3\Worker;
+namespace Daikon\RabbitMq3\Job;
 
 use Assert\Assertion;
+use Daikon\AsyncJob\Event\JobFailed;
 use Daikon\AsyncJob\Job\JobMap;
 use Daikon\AsyncJob\Worker\WorkerInterface;
 use Daikon\MessageBus\Envelope;
+use Daikon\MessageBus\EnvelopeInterface;
 use Daikon\MessageBus\MessageBusInterface;
+use Daikon\MessageBus\Metadata\Metadata;
 use Daikon\RabbitMq3\Connector\RabbitMq3Connector;
 use PhpAmqpLib\Message\AMQPMessage;
 
@@ -32,9 +35,9 @@ final class RabbitMq3Worker implements WorkerInterface
         $this->settings = $settings;
     }
 
-    public function run(): void
+    public function run(array $parameters = []): void
     {
-        $queue = $this->settings['queue'];
+        $queue = $parameters['queue'];
         Assertion::notBlank($queue);
 
         $messageHandler = function (AMQPMessage $message) {
@@ -55,18 +58,37 @@ final class RabbitMq3Worker implements WorkerInterface
         $deliveryInfo = $message->delivery_info;
         $channel = $deliveryInfo['channel'];
         $deliveryTag = $deliveryInfo['delivery_tag'];
+
         $envelope = Envelope::fromArray(json_decode($message->body, true));
         $metadata = $envelope->getMetadata();
         $job = $this->jobMap->get($metadata->get('job'));
 
-        //@todo possibly move execution to the job
         try {
             $this->messageBus->receive($envelope);
         } catch (\Exception $error) {
-            //@todo manage job retry and failure
-            throw $error;
+            if ($job->getStrategy()->canRetry()) {
+                $this->retry($envelope);
+            } else {
+                $this->fail(
+                    $envelope,
+                    $metadata->with('_errorMessage', $error->getMessage())
+                );
+            }
         }
 
         $channel->basic_ack($deliveryTag);
+    }
+
+    private function retry(EnvelopeInterface $envelope): void
+    {
+        //work out retry mechanism
+        //republish to message bus with expiration?
+        //defer in transport?
+    }
+
+    private function fail(EnvelopeInterface $envelope, Metadata $metadata): void
+    {
+        $jobFailed = JobFailed::fromArray(['failed_message' => $envelope->getMessage()]);
+        $this->messageBus->publish($jobFailed, 'logging', $metadata);
     }
 }
