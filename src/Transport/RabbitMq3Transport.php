@@ -31,7 +31,11 @@ final class RabbitMq3Transport implements TransportInterface
         Assertion::string($routingKey);
 
         $payload = json_encode($envelope->toArray(), true);
-        $message = new AMQPMessage($payload, ['delivery_mode' => AMQPMessage::DELIVERY_MODE_PERSISTENT]);
+        $properties = ['delivery_mode' => AMQPMessage::DELIVERY_MODE_PERSISTENT];
+        if ($metadata->has('_expiration')) {
+            $properties['expiration'] = $metadata->get('_expiration');
+        }
+        $message = new AMQPMessage($payload, $properties);
 
         $channel = $this->connector->getConnection()->channel();
         $channel->basic_publish($message, $exchange, $routingKey);

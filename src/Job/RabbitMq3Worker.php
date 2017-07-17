@@ -9,6 +9,7 @@ use Daikon\AsyncJob\Worker\WorkerInterface;
 use Daikon\MessageBus\Envelope;
 use Daikon\MessageBus\EnvelopeInterface;
 use Daikon\MessageBus\MessageBusInterface;
+use Daikon\MessageBus\MessageInterface;
 use Daikon\MessageBus\Metadata\Metadata;
 use Daikon\RabbitMq3\Connector\RabbitMq3Connector;
 use PhpAmqpLib\Message\AMQPMessage;
@@ -64,31 +65,33 @@ final class RabbitMq3Worker implements WorkerInterface
         $job = $this->jobMap->get($metadata->get('job'));
 
         try {
+            throw new \Exception('test');
             $this->messageBus->receive($envelope);
         } catch (\Exception $error) {
-            if ($job->getStrategy()->canRetry()) {
-                $this->retry($envelope);
+            $message = $envelope->getMessage();
+            if ($job->getStrategy()->canRetry($envelope)) {
+                $retries = $metadata->get('_retries', 0);
+                $metadata = $metadata
+                    ->with('_retries', ++$retries)
+                    ->with('_expiration', $job->getStrategy()->getRetryInterval($envelope));
+                $this->retry($message, $metadata);
             } else {
-                $this->fail(
-                    $envelope,
-                    $metadata->with('_errorMessage', $error->getMessage())
-                );
+                $metadata = $metadata->with('_error_message', $error->getMessage());
+                $this->fail($message, $metadata);
             }
         }
 
         $channel->basic_ack($deliveryTag);
     }
 
-    private function retry(EnvelopeInterface $envelope): void
+    private function retry(MessageInterface $message, Metadata $metadata): void
     {
-        //work out retry mechanism
-        //republish to message bus with expiration?
-        //defer in transport?
+        $this->messageBus->publish($message, $metadata->get('_channel'), $metadata);
     }
 
-    private function fail(EnvelopeInterface $envelope, Metadata $metadata): void
+    private function fail(MessageInterface $message, Metadata $metadata): void
     {
-        $jobFailed = JobFailed::fromArray(['failed_message' => $envelope->getMessage()]);
+        $jobFailed = JobFailed::fromArray(['failed_message' => $message]);
         $this->messageBus->publish($jobFailed, 'logging', $metadata);
     }
 }
