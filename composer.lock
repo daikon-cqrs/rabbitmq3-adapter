@@ -67,12 +67,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/daikon-cqrs/async-job.git",
-                "reference": "540ba6948303f3bd55d2f910486856cde8688f7e"
+                "reference": "9809e6ebb7eb4b0309c4992ed560d8c677419d33"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/daikon-cqrs/async-job/zipball/540ba6948303f3bd55d2f910486856cde8688f7e",
-                "reference": "540ba6948303f3bd55d2f910486856cde8688f7e",
+                "url": "https://api.github.com/repos/daikon-cqrs/async-job/zipball/9809e6ebb7eb4b0309c4992ed560d8c677419d33",
+                "reference": "9809e6ebb7eb4b0309c4992ed560d8c677419d33",
                 "shasum": ""
             },
             "require": {
@@ -105,7 +105,7 @@
                 "job",
                 "worker"
             ],
-            "time": "2017-07-17 23:42:41"
+            "time": "2017-07-22 22:15:42"
         },
         {
             "name": "daikon/data-structure",
@@ -113,12 +113,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/daikon-cqrs/data-structure.git",
-                "reference": "723c960d94a21554ca90234da307f1e945531cd4"
+                "reference": "daf5c2b2310b11129934bad05be7f274e396b42b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/daikon-cqrs/data-structure/zipball/723c960d94a21554ca90234da307f1e945531cd4",
-                "reference": "723c960d94a21554ca90234da307f1e945531cd4",
+                "url": "https://api.github.com/repos/daikon-cqrs/data-structure/zipball/daf5c2b2310b11129934bad05be7f274e396b42b",
+                "reference": "daf5c2b2310b11129934bad05be7f274e396b42b",
                 "shasum": ""
             },
             "require": {
@@ -155,7 +155,7 @@
                 "list",
                 "map"
             ],
-            "time": "2017-07-17 14:05:15"
+            "time": "2017-07-22 22:08:25"
         },
         {
             "name": "daikon/dbal",
@@ -163,12 +163,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/daikon-cqrs/dbal.git",
-                "reference": "957b22470c58d889b2a97c109b5c4003e721953b"
+                "reference": "3352c618940cba2e6c55e3e886555e87957556fb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/daikon-cqrs/dbal/zipball/957b22470c58d889b2a97c109b5c4003e721953b",
-                "reference": "957b22470c58d889b2a97c109b5c4003e721953b",
+                "url": "https://api.github.com/repos/daikon-cqrs/dbal/zipball/3352c618940cba2e6c55e3e886555e87957556fb",
+                "reference": "3352c618940cba2e6c55e3e886555e87957556fb",
                 "shasum": ""
             },
             "require": {
@@ -198,7 +198,7 @@
                 "dbal",
                 "immutable"
             ],
-            "time": "2017-07-12 16:39:02"
+            "time": "2017-07-22 22:16:31"
         },
         {
             "name": "daikon/message-bus",
@@ -206,18 +206,18 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/daikon-cqrs/message-bus.git",
-                "reference": "1f19d7234a5f4db875f9f8708dcbb638bcbc1407"
+                "reference": "c00c8346625798324b7edf729bf2382ef76cb7b5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/daikon-cqrs/message-bus/zipball/1f19d7234a5f4db875f9f8708dcbb638bcbc1407",
-                "reference": "1f19d7234a5f4db875f9f8708dcbb638bcbc1407",
+                "url": "https://api.github.com/repos/daikon-cqrs/message-bus/zipball/c00c8346625798324b7edf729bf2382ef76cb7b5",
+                "reference": "c00c8346625798324b7edf729bf2382ef76cb7b5",
                 "shasum": ""
             },
             "require": {
                 "daikon/data-structure": "master@dev",
                 "php": ">=7.1",
-                "ramsey/uuid": "3.6.*"
+                "ramsey/uuid": "^3.6.0"
             },
             "require-dev": {
                 "phpunit/phpunit": "^6.2",
@@ -240,7 +240,7 @@
                 "message-bus",
                 "messaging"
             ],
-            "time": "2017-07-17 10:46:40"
+            "time": "2017-07-22 22:13:14"
         },
         {
             "name": "paragonie/random_compat",
@@ -493,32 +493,32 @@
     "packages-dev": [
         {
             "name": "doctrine/instantiator",
-            "version": "1.0.5",
+            "version": "1.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/instantiator.git",
-                "reference": "8e884e78f9f0eb1329e445619e04456e64d8051d"
+                "reference": "185b8868aa9bf7159f5f953ed5afb2d7fcdc3bda"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/instantiator/zipball/8e884e78f9f0eb1329e445619e04456e64d8051d",
-                "reference": "8e884e78f9f0eb1329e445619e04456e64d8051d",
+                "url": "https://api.github.com/repos/doctrine/instantiator/zipball/185b8868aa9bf7159f5f953ed5afb2d7fcdc3bda",
+                "reference": "185b8868aa9bf7159f5f953ed5afb2d7fcdc3bda",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.3,<8.0-DEV"
+                "php": "^7.1"
             },
             "require-dev": {
                 "athletic/athletic": "~0.1.8",
                 "ext-pdo": "*",
                 "ext-phar": "*",
-                "phpunit/phpunit": "~4.0",
-                "squizlabs/php_codesniffer": "~2.0"
+                "phpunit/phpunit": "^6.2.3",
+                "squizlabs/php_codesniffer": "^3.0.2"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.0.x-dev"
+                    "dev-master": "1.2.x-dev"
                 }
             },
             "autoload": {
@@ -543,7 +543,7 @@
                 "constructor",
                 "instantiate"
             ],
-            "time": "2015-06-14T21:17:01+00:00"
+            "time": "2017-07-22T11:58:36+00:00"
         },
         {
             "name": "guzzlehttp/guzzle",
@@ -2193,16 +2193,16 @@
         },
         {
             "name": "squizlabs/php_codesniffer",
-            "version": "3.0.1",
+            "version": "3.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/squizlabs/PHP_CodeSniffer.git",
-                "reference": "f9eaf037edf22fdfccf04cb0ab57ebcb1e166219"
+                "reference": "c7594a88ae75401e8f8d0bd4deb8431b39045c51"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/squizlabs/PHP_CodeSniffer/zipball/f9eaf037edf22fdfccf04cb0ab57ebcb1e166219",
-                "reference": "f9eaf037edf22fdfccf04cb0ab57ebcb1e166219",
+                "url": "https://api.github.com/repos/squizlabs/PHP_CodeSniffer/zipball/c7594a88ae75401e8f8d0bd4deb8431b39045c51",
+                "reference": "c7594a88ae75401e8f8d0bd4deb8431b39045c51",
                 "shasum": ""
             },
             "require": {
@@ -2240,7 +2240,7 @@
                 "phpcs",
                 "standards"
             ],
-            "time": "2017-06-14T01:23:49+00:00"
+            "time": "2017-07-18T01:12:32+00:00"
         },
         {
             "name": "symfony/config",
