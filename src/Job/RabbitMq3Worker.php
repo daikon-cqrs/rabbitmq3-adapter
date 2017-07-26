@@ -4,7 +4,7 @@ namespace Daikon\RabbitMq3\Job;
 
 use Assert\Assertion;
 use Daikon\AsyncJob\Event\JobFailed;
-use Daikon\AsyncJob\Job\JobMap;
+use Daikon\AsyncJob\Job\JobDefinitionMap;
 use Daikon\AsyncJob\Worker\WorkerInterface;
 use Daikon\MessageBus\Envelope;
 use Daikon\MessageBus\EnvelopeInterface;
@@ -20,19 +20,19 @@ final class RabbitMq3Worker implements WorkerInterface
 
     private $messageBus;
 
-    private $jobMap;
+    private $jobDefinitionMap;
 
     private $settings;
 
     public function __construct(
         RabbitMq3Connector $connector,
         MessageBusInterface $messageBus,
-        JobMap $jobMap,
+        JobDefinitionMap $jobDefinitionMap,
         array $settings = []
     ) {
         $this->connector = $connector;
         $this->messageBus = $messageBus;
-        $this->jobMap = $jobMap;
+        $this->jobDefinitionMap = $jobDefinitionMap;
         $this->settings = $settings;
     }
 
@@ -62,7 +62,7 @@ final class RabbitMq3Worker implements WorkerInterface
 
         $envelope = Envelope::fromArray(json_decode($message->body, true));
         $metadata = $envelope->getMetadata();
-        $job = $this->jobMap->get($metadata->get('job'));
+        $job = $this->jobDefinitionMap->get($metadata->get('job'));
 
         try {
             throw new \Exception('test');

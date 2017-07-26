@@ -67,12 +67,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/daikon-cqrs/async-job.git",
-                "reference": "9809e6ebb7eb4b0309c4992ed560d8c677419d33"
+                "reference": "2762a5d321ff324f54c3f0b4ae3bd5b368e09cfe"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/daikon-cqrs/async-job/zipball/9809e6ebb7eb4b0309c4992ed560d8c677419d33",
-                "reference": "9809e6ebb7eb4b0309c4992ed560d8c677419d33",
+                "url": "https://api.github.com/repos/daikon-cqrs/async-job/zipball/2762a5d321ff324f54c3f0b4ae3bd5b368e09cfe",
+                "reference": "2762a5d321ff324f54c3f0b4ae3bd5b368e09cfe",
                 "shasum": ""
             },
             "require": {
@@ -105,7 +105,7 @@
                 "job",
                 "worker"
             ],
-            "time": "2017-07-22 22:15:42"
+            "time": "2017-07-26 19:06:09"
         },
         {
             "name": "daikon/data-structure",
@@ -113,12 +113,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/daikon-cqrs/data-structure.git",
-                "reference": "daf5c2b2310b11129934bad05be7f274e396b42b"
+                "reference": "4fdc6b0712ca992217b47f7cc6f8058e1f91caa3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/daikon-cqrs/data-structure/zipball/daf5c2b2310b11129934bad05be7f274e396b42b",
-                "reference": "daf5c2b2310b11129934bad05be7f274e396b42b",
+                "url": "https://api.github.com/repos/daikon-cqrs/data-structure/zipball/4fdc6b0712ca992217b47f7cc6f8058e1f91caa3",
+                "reference": "4fdc6b0712ca992217b47f7cc6f8058e1f91caa3",
                 "shasum": ""
             },
             "require": {
@@ -155,7 +155,7 @@
                 "list",
                 "map"
             ],
-            "time": "2017-07-22 22:08:25"
+            "time": "2017-07-23 23:36:51"
         },
         {
             "name": "daikon/dbal",
@@ -163,17 +163,19 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/daikon-cqrs/dbal.git",
-                "reference": "3352c618940cba2e6c55e3e886555e87957556fb"
+                "reference": "12011f8431de1a4ec5dc7061b2c374c4e424d52d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/daikon-cqrs/dbal/zipball/3352c618940cba2e6c55e3e886555e87957556fb",
-                "reference": "3352c618940cba2e6c55e3e886555e87957556fb",
+                "url": "https://api.github.com/repos/daikon-cqrs/dbal/zipball/12011f8431de1a4ec5dc7061b2c374c4e424d52d",
+                "reference": "12011f8431de1a4ec5dc7061b2c374c4e424d52d",
                 "shasum": ""
             },
             "require": {
                 "beberlei/assert": "^2.7",
                 "daikon/data-structure": "master@dev",
+                "daikon/event-sourcing": "master@dev",
+                "daikon/read-model": "master@dev",
                 "php": ">=7.1"
             },
             "require-dev": {
@@ -198,7 +200,51 @@
                 "dbal",
                 "immutable"
             ],
-            "time": "2017-07-22 22:16:31"
+            "time": "2017-07-24 00:02:50"
+        },
+        {
+            "name": "daikon/event-sourcing",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/daikon-cqrs/event-sourcing.git",
+                "reference": "4f62186ff2cb8838f9a223c38c446c7e846f6084"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/daikon-cqrs/event-sourcing/zipball/4f62186ff2cb8838f9a223c38c446c7e846f6084",
+                "reference": "4f62186ff2cb8838f9a223c38c446c7e846f6084",
+                "shasum": ""
+            },
+            "require": {
+                "beberlei/assert": "^2.7",
+                "daikon/data-structure": "master@dev",
+                "daikon/message-bus": "master@dev",
+                "php": ">=7.1"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^6.2",
+                "satooshi/php-coveralls": "master@dev",
+                "squizlabs/php_codesniffer": "^3.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Daikon\\EventSourcing\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MPL-2.0"
+            ],
+            "description": "CQRS and event-sourcing library for PHP7.",
+            "homepage": "https://github.com/daikon-cqrs/sourcing",
+            "keywords": [
+                "cqrs",
+                "event-sourcing",
+                "immutable"
+            ],
+            "time": "2017-07-26 15:22:29"
         },
         {
             "name": "daikon/message-bus",
@@ -241,6 +287,52 @@
                 "messaging"
             ],
             "time": "2017-07-22 22:13:14"
+        },
+        {
+            "name": "daikon/read-model",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/daikon-cqrs/read-model.git",
+                "reference": "72a5c832d7a73038041df0c1ef823896360e059d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/daikon-cqrs/read-model/zipball/72a5c832d7a73038041df0c1ef823896360e059d",
+                "reference": "72a5c832d7a73038041df0c1ef823896360e059d",
+                "shasum": ""
+            },
+            "require": {
+                "beberlei/assert": "^2.7",
+                "daikon/data-structure": "master@dev",
+                "daikon/event-sourcing": "master@dev",
+                "daikon/message-bus": "master@dev",
+                "php": ">=7.1"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^6.2",
+                "satooshi/php-coveralls": "master@dev",
+                "squizlabs/php_codesniffer": "^3.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Daikon\\ReadModel\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MPL-2.0"
+            ],
+            "description": "Read-model components for Daikon projects.",
+            "homepage": "https://github.com/daikon-cqrs/read-model",
+            "keywords": [
+                "immutable",
+                "projection",
+                "read-model",
+                "repository"
+            ],
+            "time": "2017-07-24 15:53:36"
         },
         {
             "name": "paragonie/random_compat",
