@@ -54,7 +54,7 @@ final class RabbitMq3MigrationAdapter implements MigrationAdapterInterface
             $client->post($uri, [
                 'body' => json_encode([
                     'routing_key' => $identifier,
-                    'arguments' => $migration->toArray()
+                    'arguments' => $migration->toNative()
                 ])
             ]);
         }
