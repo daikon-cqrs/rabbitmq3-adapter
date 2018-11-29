@@ -10,7 +10,7 @@ class RabbitMq3Connector implements ConnectorInterface
 {
     use ConnectorTrait;
 
-    private function connect()
+    private function connect(): AMQPLazyConnection
     {
         $settings = $this->getSettings();
 

@@ -9,8 +9,10 @@ use Daikon\RabbitMq3\Connector\RabbitMq3AdminConnector;
 
 final class RabbitMq3MigrationAdapter implements MigrationAdapterInterface
 {
+    /** @var RabbitMq3AdminConnector */
     private $connector;
 
+    /** @var array */
     private $settings;
 
     public function __construct(RabbitMq3AdminConnector $connector, array $settings = [])
@@ -22,9 +24,12 @@ final class RabbitMq3MigrationAdapter implements MigrationAdapterInterface
     public function read(string $identifier): MigrationList
     {
         $currentMigrations= $this->loadMigrations();
-        $migrations = array_filter($currentMigrations, function ($migration) use ($identifier) {
-            return $migration['routing_key'] === $identifier;
-        });
+        $migrations = array_filter(
+            $currentMigrations,
+            function (array $migration) use ($identifier): bool {
+                return $migration['routing_key'] === $identifier;
+            }
+        );
 
         return $this->createMigrationList($migrations);
     }

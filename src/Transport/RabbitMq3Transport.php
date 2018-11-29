@@ -11,8 +11,10 @@ use PhpAmqpLib\Message\AMQPMessage;
 
 final class RabbitMq3Transport implements TransportInterface
 {
+    /** @var string */
     private $key;
 
+    /** @var RabbitMq3Connector */
     private $connector;
 
     public function __construct(string $key, RabbitMq3Connector $connector)
@@ -30,7 +32,7 @@ final class RabbitMq3Transport implements TransportInterface
         Assertion::notBlank($exchange);
         Assertion::string($routingKey);
 
-        $payload = json_encode($envelope->toArray(), true);
+        $payload = json_encode($envelope->toNative());
         $properties = ['delivery_mode' => AMQPMessage::DELIVERY_MODE_PERSISTENT];
         if ($metadata->has('_expiration')) {
             $properties['expiration'] = $metadata->get('_expiration');

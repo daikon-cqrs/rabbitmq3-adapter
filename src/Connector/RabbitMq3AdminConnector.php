@@ -10,7 +10,7 @@ final class RabbitMq3AdminConnector implements ConnectorInterface
 {
     use ConnectorTrait;
 
-    private function connect()
+    private function connect(): Client
     {
         $clientOptions = [
             'base_uri' => sprintf(

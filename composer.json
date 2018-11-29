@@ -9,9 +9,9 @@
     "minimum-stability": "dev",
     "require": {
         "php": "^7.2",
-        "daikon/async-job": "dev-upgrade-7.2",
-        "daikon/dbal": "dev-upgrade-7.2",
-        "daikon/message-bus": "dev-upgrade-7.2",
+        "daikon/async-job": "dev-upgrade/nativecalls",
+        "daikon/dbal": "dev-upgrade/nativecalls",
+        "daikon/message-bus": "dev-upgrade/nativecalls",
         "php-amqplib/php-amqplib": "^v2.8"
     },
     "require-dev": {
@@ -26,6 +26,12 @@
     "autoload-dev": {
         "psr-4": { "Daikon\\Tests\\RabbitMq3\\": "tests" }
     },
+    "archive": {
+        "exclude": [
+            "/build",
+            "/vendor"
+        ]
+    },
     "scripts": {
         "build": [ "@sniff", "@tests" ],
         "code-sniffer-autofix": "phpcbf --standard=PSR2 -d tabWidth=4 src/",
@@ -34,7 +40,8 @@
         "sniff": [
             "@code-sniffer",
             "@copy-paste-detector",
-            "@validate-json"
+            "@validate-json",
+            "psalm"
         ],
         "test": "phpunit --no-coverage",
         "tests": "phpunit",
