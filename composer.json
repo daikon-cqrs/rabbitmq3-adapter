@@ -9,9 +9,9 @@
     "minimum-stability": "dev",
     "require": {
         "php": "^7.2",
-        "daikon/async-job": "dev-upgrade/nativecalls",
-        "daikon/dbal": "dev-upgrade/nativecalls",
-        "daikon/message-bus": "dev-upgrade/nativecalls",
+        "daikon/async-job": "dev-upgrade-7.2",
+        "daikon/dbal": "dev-upgrade-7.2",
+        "daikon/message-bus": "dev-upgrade-7.2",
         "php-amqplib/php-amqplib": "^v2.8"
     },
     "require-dev": {
