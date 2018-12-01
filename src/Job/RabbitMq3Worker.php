@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file is part of the daikon-cqrs/rabbitmq3-adapter project.
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+declare(strict_types=1);
 
 namespace Daikon\RabbitMq3\Job;
 
@@ -10,18 +18,23 @@ use Daikon\MessageBus\Envelope;
 use Daikon\MessageBus\EnvelopeInterface;
 use Daikon\MessageBus\MessageBusInterface;
 use Daikon\MessageBus\MessageInterface;
-use Daikon\MessageBus\Metadata\Metadata;
+use Daikon\MessageBus\Metadata\MetadataInterface;
 use Daikon\RabbitMq3\Connector\RabbitMq3Connector;
+use PhpAmqpLib\Channel\AMQPChannel;
 use PhpAmqpLib\Message\AMQPMessage;
 
 final class RabbitMq3Worker implements WorkerInterface
 {
+    /** @var RabbitMq3Connector */
     private $connector;
 
+    /** @var MessageBusInterface */
     private $messageBus;
 
+    /** @var JobDefinitionMap */
     private $jobDefinitionMap;
 
+    /** @var array */
     private $settings;
 
     public function __construct(
@@ -41,13 +54,14 @@ final class RabbitMq3Worker implements WorkerInterface
         $queue = $parameters['queue'];
         Assertion::notBlank($queue);
 
-        $messageHandler = function (AMQPMessage $message) {
+        $messageHandler = function (AMQPMessage $message): void {
             $this->execute($message);
         };
 
+        /** @var AMQPChannel $channel */
         $channel = $this->connector->getConnection()->channel();
-        $channel->basic_qos(null, 1, null);
-        $channel->basic_consume($queue, false, true, false, false, false, $messageHandler);
+        $channel->basic_qos(0, 1, false);
+        $channel->basic_consume($queue, '', true, false, false, false, $messageHandler);
 
         while (count($channel->callbacks)) {
             $channel->wait();
@@ -60,7 +74,7 @@ final class RabbitMq3Worker implements WorkerInterface
         $channel = $deliveryInfo['channel'];
         $deliveryTag = $deliveryInfo['delivery_tag'];
 
-        $envelope = Envelope::fromArray(json_decode($message->body, true));
+        $envelope = Envelope::fromNative(json_decode($message->body, true));
         $metadata = $envelope->getMetadata();
         $job = $this->jobDefinitionMap->get($metadata->get('job'));
 
@@ -84,14 +98,14 @@ final class RabbitMq3Worker implements WorkerInterface
         $channel->basic_ack($deliveryTag);
     }
 
-    private function retry(MessageInterface $message, Metadata $metadata): void
+    private function retry(MessageInterface $message, MetadataInterface $metadata): void
     {
         $this->messageBus->publish($message, $metadata->get('_channel'), $metadata);
     }
 
-    private function fail(MessageInterface $message, Metadata $metadata): void
+    private function fail(MessageInterface $message, MetadataInterface $metadata): void
     {
-        $jobFailed = JobFailed::fromArray(['failed_message' => $message]);
+        $jobFailed = JobFailed::fromNative(['failed_message' => $message]);
         $this->messageBus->publish($jobFailed, 'logging', $metadata);
     }
 }

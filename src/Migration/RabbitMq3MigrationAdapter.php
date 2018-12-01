@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file is part of the daikon-cqrs/rabbitmq3-adapter project.
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+declare(strict_types=1);
 
 namespace Daikon\RabbitMq3\Migration;
 
@@ -9,8 +17,10 @@ use Daikon\RabbitMq3\Connector\RabbitMq3AdminConnector;
 
 final class RabbitMq3MigrationAdapter implements MigrationAdapterInterface
 {
+    /** @var RabbitMq3AdminConnector */
     private $connector;
 
+    /** @var array */
     private $settings;
 
     public function __construct(RabbitMq3AdminConnector $connector, array $settings = [])
@@ -22,9 +32,12 @@ final class RabbitMq3MigrationAdapter implements MigrationAdapterInterface
     public function read(string $identifier): MigrationList
     {
         $currentMigrations= $this->loadMigrations();
-        $migrations = array_filter($currentMigrations, function ($migration) use ($identifier) {
-            return $migration['routing_key'] === $identifier;
-        });
+        $migrations = array_filter(
+            $currentMigrations,
+            function (array $migration) use ($identifier): bool {
+                return $migration['routing_key'] === $identifier;
+            }
+        );
 
         return $this->createMigrationList($migrations);
     }
@@ -49,7 +62,7 @@ final class RabbitMq3MigrationAdapter implements MigrationAdapterInterface
             $client->post($uri, [
                 'body' => json_encode([
                     'routing_key' => $identifier,
-                    'arguments' => $migration->toArray()
+                    'arguments' => $migration->toNative()
                 ])
             ]);
         }
@@ -64,7 +77,7 @@ final class RabbitMq3MigrationAdapter implements MigrationAdapterInterface
     {
         $uri = sprintf('/api/exchanges/%s/%s/bindings/source', $this->getVhost(), $this->settings['exchange']);
         $response = $this->connector->getConnection()->get($uri);
-        return json_decode($response->getBody(), true);
+        return json_decode($response->getBody()->getContents(), true);
     }
 
     private function createMigrationList(array $migrationData): MigrationList

@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file is part of the daikon-cqrs/rabbitmq3-adapter project.
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+declare(strict_types=1);
 
 namespace Daikon\RabbitMq3\Transport;
 
@@ -11,8 +19,10 @@ use PhpAmqpLib\Message\AMQPMessage;
 
 final class RabbitMq3Transport implements TransportInterface
 {
+    /** @var string */
     private $key;
 
+    /** @var RabbitMq3Connector */
     private $connector;
 
     public function __construct(string $key, RabbitMq3Connector $connector)
@@ -30,7 +40,7 @@ final class RabbitMq3Transport implements TransportInterface
         Assertion::notBlank($exchange);
         Assertion::string($routingKey);
 
-        $payload = json_encode($envelope->toArray(), true);
+        $payload = json_encode($envelope->toNative());
         $properties = ['delivery_mode' => AMQPMessage::DELIVERY_MODE_PERSISTENT];
         if ($metadata->has('_expiration')) {
             $properties['expiration'] = $metadata->get('_expiration');
