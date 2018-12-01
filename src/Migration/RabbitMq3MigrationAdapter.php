@@ -77,7 +77,7 @@ final class RabbitMq3MigrationAdapter implements MigrationAdapterInterface
     {
         $uri = sprintf('/api/exchanges/%s/%s/bindings/source', $this->getVhost(), $this->settings['exchange']);
         $response = $this->connector->getConnection()->get($uri);
-        return json_decode($response->getBody(), true);
+        return json_decode($response->getBody()->getContents(), true);
     }
 
     private function createMigrationList(array $migrationData): MigrationList
