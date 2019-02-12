@@ -79,7 +79,6 @@ final class RabbitMq3Worker implements WorkerInterface
         $job = $this->jobDefinitionMap->get($metadata->get('job'));
 
         try {
-            throw new \Exception('test');
             $this->messageBus->receive($envelope);
         } catch (\Exception $error) {
             $message = $envelope->getMessage();
@@ -106,6 +105,6 @@ final class RabbitMq3Worker implements WorkerInterface
     private function fail(MessageInterface $message, MetadataInterface $metadata): void
     {
         $jobFailed = JobFailed::fromNative(['failed_message' => $message]);
-        $this->messageBus->publish($jobFailed, 'logging', $metadata);
+        $this->messageBus->publish($jobFailed, 'events', $metadata);
     }
 }
