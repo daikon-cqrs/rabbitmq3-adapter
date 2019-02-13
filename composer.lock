@@ -67,12 +67,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/daikon-cqrs/async-job.git",
-                "reference": "c48cb3f6c1f87cae9c75b693e23c13ab4796d8b3"
+                "reference": "a03dc190315643d0fc7f704716a93e6445cee6c5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/daikon-cqrs/async-job/zipball/c48cb3f6c1f87cae9c75b693e23c13ab4796d8b3",
-                "reference": "c48cb3f6c1f87cae9c75b693e23c13ab4796d8b3",
+                "url": "https://api.github.com/repos/daikon-cqrs/async-job/zipball/a03dc190315643d0fc7f704716a93e6445cee6c5",
+                "reference": "a03dc190315643d0fc7f704716a93e6445cee6c5",
                 "shasum": ""
             },
             "require": {
@@ -106,7 +106,7 @@
                 "job",
                 "worker"
             ],
-            "time": "2019-02-10T17:11:09+00:00"
+            "time": "2019-02-13T12:14:50+00:00"
         },
         {
             "name": "daikon/data-structure",
@@ -285,12 +285,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/daikon-cqrs/message-bus.git",
-                "reference": "875561fd445e9f915bda04a1c2c60b832d40c9fc"
+                "reference": "b51170b76431e05c65451899a13c00307af1f5ae"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/daikon-cqrs/message-bus/zipball/875561fd445e9f915bda04a1c2c60b832d40c9fc",
-                "reference": "875561fd445e9f915bda04a1c2c60b832d40c9fc",
+                "url": "https://api.github.com/repos/daikon-cqrs/message-bus/zipball/b51170b76431e05c65451899a13c00307af1f5ae",
+                "reference": "b51170b76431e05c65451899a13c00307af1f5ae",
                 "shasum": ""
             },
             "require": {
@@ -321,7 +321,7 @@
                 "message-bus",
                 "messaging"
             ],
-            "time": "2019-02-10T17:09:02+00:00"
+            "time": "2019-02-13T12:03:24+00:00"
         },
         {
             "name": "daikon/read-model",

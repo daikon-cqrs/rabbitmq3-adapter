@@ -11,17 +11,14 @@ declare(strict_types=1);
 namespace Daikon\RabbitMq3\Job;
 
 use Assert\Assertion;
-use Daikon\AsyncJob\Event\JobFailed;
 use Daikon\AsyncJob\Job\JobDefinitionMap;
 use Daikon\AsyncJob\Worker\WorkerInterface;
 use Daikon\MessageBus\Envelope;
-use Daikon\MessageBus\EnvelopeInterface;
 use Daikon\MessageBus\MessageBusInterface;
-use Daikon\MessageBus\MessageInterface;
-use Daikon\MessageBus\Metadata\MetadataInterface;
 use Daikon\RabbitMq3\Connector\RabbitMq3Connector;
 use PhpAmqpLib\Channel\AMQPChannel;
 use PhpAmqpLib\Message\AMQPMessage;
+use Psr\Log\LoggerInterface;
 
 final class RabbitMq3Worker implements WorkerInterface
 {
@@ -34,6 +31,9 @@ final class RabbitMq3Worker implements WorkerInterface
     /** @var JobDefinitionMap */
     private $jobDefinitionMap;
 
+    /** @var LoggerInterface */
+    private $logger;
+
     /** @var array */
     private $settings;
 
@@ -41,11 +41,13 @@ final class RabbitMq3Worker implements WorkerInterface
         RabbitMq3Connector $connector,
         MessageBusInterface $messageBus,
         JobDefinitionMap $jobDefinitionMap,
+        LoggerInterface $logger,
         array $settings = []
     ) {
         $this->connector = $connector;
         $this->messageBus = $messageBus;
         $this->jobDefinitionMap = $jobDefinitionMap;
+        $this->logger = $logger;
         $this->settings = $settings;
     }
 
@@ -54,8 +56,8 @@ final class RabbitMq3Worker implements WorkerInterface
         $queue = $parameters['queue'];
         Assertion::notBlank($queue);
 
-        $messageHandler = function (AMQPMessage $message): void {
-            $this->execute($message);
+        $messageHandler = function (AMQPMessage $amqpMessage): void {
+            $this->execute($amqpMessage);
         };
 
         /** @var AMQPChannel $channel */
@@ -68,15 +70,16 @@ final class RabbitMq3Worker implements WorkerInterface
         }
     }
 
-    private function execute(AMQPMessage $message): void
+    private function execute(AMQPMessage $amqpMessage): void
     {
-        $deliveryInfo = $message->delivery_info;
+        $deliveryInfo = $amqpMessage->delivery_info;
         $channel = $deliveryInfo['channel'];
         $deliveryTag = $deliveryInfo['delivery_tag'];
 
-        $envelope = Envelope::fromNative(json_decode($message->body, true));
+        $envelope = Envelope::fromNative(json_decode($amqpMessage->body, true));
         $metadata = $envelope->getMetadata();
-        $job = $this->jobDefinitionMap->get($metadata->get('job'));
+        $jobName = $metadata->get('job');
+        $job = $this->jobDefinitionMap->get($jobName);
 
         try {
             $this->messageBus->receive($envelope);
@@ -87,24 +90,13 @@ final class RabbitMq3Worker implements WorkerInterface
                 $metadata = $metadata
                     ->with('_retries', ++$retries)
                     ->with('_expiration', $job->getStrategy()->getRetryInterval($envelope));
-                $this->retry($message, $metadata);
+                $this->messageBus->publish($message, $metadata->get('_channel'), $metadata);
             } else {
-                $metadata = $metadata->with('_error_message', $error->getMessage());
-                $this->fail($message, $metadata);
+                //@todo add message/metadata to error context
+                $this->logger->error("Failed handling job '$jobName'", ['exception' => $error]);
             }
         }
 
         $channel->basic_ack($deliveryTag);
-    }
-
-    private function retry(MessageInterface $message, MetadataInterface $metadata): void
-    {
-        $this->messageBus->publish($message, $metadata->get('_channel'), $metadata);
-    }
-
-    private function fail(MessageInterface $message, MetadataInterface $metadata): void
-    {
-        $jobFailed = JobFailed::fromNative(['failed_message' => $message]);
-        $this->messageBus->publish($jobFailed, 'events', $metadata);
     }
 }
