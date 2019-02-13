@@ -67,12 +67,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/daikon-cqrs/async-job.git",
-                "reference": "a03dc190315643d0fc7f704716a93e6445cee6c5"
+                "reference": "f03e73385d957e275a723b5a706de024eb1b916f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/daikon-cqrs/async-job/zipball/a03dc190315643d0fc7f704716a93e6445cee6c5",
-                "reference": "a03dc190315643d0fc7f704716a93e6445cee6c5",
+                "url": "https://api.github.com/repos/daikon-cqrs/async-job/zipball/f03e73385d957e275a723b5a706de024eb1b916f",
+                "reference": "f03e73385d957e275a723b5a706de024eb1b916f",
                 "shasum": ""
             },
             "require": {
@@ -106,7 +106,7 @@
                 "job",
                 "worker"
             ],
-            "time": "2019-02-13T12:14:50+00:00"
+            "time": "2019-02-13T13:29:33+00:00"
         },
         {
             "name": "daikon/data-structure",
@@ -205,12 +205,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/daikon-cqrs/event-sourcing.git",
-                "reference": "df7fde08b4a11c2e331e5d96af3ab3f7fb023da9"
+                "reference": "ff0add846a55c6438c2a01c1ad76285c2351432b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/daikon-cqrs/event-sourcing/zipball/df7fde08b4a11c2e331e5d96af3ab3f7fb023da9",
-                "reference": "df7fde08b4a11c2e331e5d96af3ab3f7fb023da9",
+                "url": "https://api.github.com/repos/daikon-cqrs/event-sourcing/zipball/ff0add846a55c6438c2a01c1ad76285c2351432b",
+                "reference": "ff0add846a55c6438c2a01c1ad76285c2351432b",
                 "shasum": ""
             },
             "require": {
@@ -242,7 +242,7 @@
                 "event-sourcing",
                 "immutable"
             ],
-            "time": "2019-02-10T17:12:35+00:00"
+            "time": "2019-02-13T13:35:36+00:00"
         },
         {
             "name": "daikon/interop",
@@ -285,12 +285,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/daikon-cqrs/message-bus.git",
-                "reference": "b51170b76431e05c65451899a13c00307af1f5ae"
+                "reference": "5644a7206798e0dace43ba2e925e974a0810ebad"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/daikon-cqrs/message-bus/zipball/b51170b76431e05c65451899a13c00307af1f5ae",
-                "reference": "b51170b76431e05c65451899a13c00307af1f5ae",
+                "url": "https://api.github.com/repos/daikon-cqrs/message-bus/zipball/5644a7206798e0dace43ba2e925e974a0810ebad",
+                "reference": "5644a7206798e0dace43ba2e925e974a0810ebad",
                 "shasum": ""
             },
             "require": {
@@ -321,7 +321,7 @@
                 "message-bus",
                 "messaging"
             ],
-            "time": "2019-02-13T12:03:24+00:00"
+            "time": "2019-02-13T13:01:45+00:00"
         },
         {
             "name": "daikon/read-model",
@@ -329,12 +329,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/daikon-cqrs/read-model.git",
-                "reference": "e52d2b7e04cffc2d4b936955e9803a6a81b26cc9"
+                "reference": "a0ce885b6382959c580d7b168825cf4b6b2c7ba5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/daikon-cqrs/read-model/zipball/e52d2b7e04cffc2d4b936955e9803a6a81b26cc9",
-                "reference": "e52d2b7e04cffc2d4b936955e9803a6a81b26cc9",
+                "url": "https://api.github.com/repos/daikon-cqrs/read-model/zipball/a0ce885b6382959c580d7b168825cf4b6b2c7ba5",
+                "reference": "a0ce885b6382959c580d7b168825cf4b6b2c7ba5",
                 "shasum": ""
             },
             "require": {
@@ -369,7 +369,7 @@
                 "read-model",
                 "repository"
             ],
-            "time": "2019-02-10T17:15:21+00:00"
+            "time": "2019-02-13T13:38:58+00:00"
         },
         {
             "name": "paragonie/random_compat",

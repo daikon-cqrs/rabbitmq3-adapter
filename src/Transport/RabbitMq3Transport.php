@@ -31,10 +31,11 @@ final class RabbitMq3Transport implements TransportInterface
         $this->connector = $connector;
     }
 
-    public function send(EnvelopeInterface $envelope, MessageBusInterface $messageBus): bool
+    public function send(EnvelopeInterface $envelope, MessageBusInterface $messageBus): void
     {
         $metadata = $envelope->getMetadata();
         $exchange = $metadata->get('exchange');
+        //@todo fix routing here
         $routingKey = $metadata->get('routing_key', $metadata->get('_aggregate_alias', ''));
 
         Assertion::notBlank($exchange);
@@ -49,8 +50,6 @@ final class RabbitMq3Transport implements TransportInterface
 
         $channel = $this->connector->getConnection()->channel();
         $channel->basic_publish($message, $exchange, $routingKey);
-
-        return true;
     }
 
     public function getKey(): string
