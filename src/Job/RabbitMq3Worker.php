@@ -78,7 +78,7 @@ final class RabbitMq3Worker implements WorkerInterface
 
         $envelope = Envelope::fromNative(json_decode($amqpMessage->body, true));
         $metadata = $envelope->getMetadata();
-        $jobName = $metadata->get('job');
+        $jobName = (string)$metadata->get('job');
         $job = $this->jobDefinitionMap->get($jobName);
 
         try {
@@ -90,7 +90,7 @@ final class RabbitMq3Worker implements WorkerInterface
                 $metadata = $metadata
                     ->with('_retries', ++$retries)
                     ->with('_expiration', $job->getStrategy()->getRetryInterval($envelope));
-                $this->messageBus->publish($message, $metadata->get('_channel'), $metadata);
+                $this->messageBus->publish($message, (string)$metadata->get('_channel'), $metadata);
             } else {
                 //@todo add message/metadata to error context
                 $this->logger->error("Failed handling job '$jobName'", ['exception' => $error]);
