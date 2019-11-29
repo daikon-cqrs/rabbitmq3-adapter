@@ -35,8 +35,7 @@ final class RabbitMq3Transport implements TransportInterface
     {
         $metadata = $envelope->getMetadata();
         $exchange = $metadata->get('exchange');
-        //@todo fix routing here
-        $routingKey = $metadata->get('routing_key', $metadata->get('_aggregate_alias', ''));
+        $routingKey = $metadata->get('routing_key', '');
 
         Assertion::notBlank($exchange);
         Assertion::string($routingKey);

@@ -79,6 +79,8 @@ final class RabbitMq3Worker implements WorkerInterface
         $envelope = Envelope::fromNative(json_decode($amqpMessage->body, true));
         $metadata = $envelope->getMetadata();
         $jobName = (string)$metadata->get('job');
+
+        Assertion::notBlank($jobName, 'Worker job name must not be blank.');
         $job = $this->jobDefinitionMap->get($jobName);
 
         try {
