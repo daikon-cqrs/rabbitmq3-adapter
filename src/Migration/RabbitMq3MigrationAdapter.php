@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * This file is part of the daikon-cqrs/rabbitmq3-adapter project.
  *
@@ -6,14 +6,13 @@
  * file that was distributed with this source code.
  */
 
-declare(strict_types=1);
-
 namespace Daikon\RabbitMq3\Migration;
 
 use Daikon\Dbal\Connector\ConnectorInterface;
 use Daikon\Dbal\Migration\MigrationAdapterInterface;
 use Daikon\Dbal\Migration\MigrationList;
 use Daikon\RabbitMq3\Connector\RabbitMq3AdminConnector;
+use DateTimeImmutable;
 
 final class RabbitMq3MigrationAdapter implements MigrationAdapterInterface
 {
@@ -85,7 +84,7 @@ final class RabbitMq3MigrationAdapter implements MigrationAdapterInterface
         $migrations = [];
         foreach ($migrationData as $migration) {
             $migrationClass = $migration['arguments']['@type'];
-            $migrations[] = new $migrationClass(new \DateTimeImmutable($migration['arguments']['executedAt']));
+            $migrations[] = new $migrationClass(new DateTimeImmutable($migration['arguments']['executedAt']));
         }
 
         return (new MigrationList($migrations))->sortByVersion();

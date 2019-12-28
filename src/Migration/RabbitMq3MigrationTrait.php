@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * This file is part of the daikon-cqrs/rabbitmq3-adapter project.
  *
@@ -6,12 +6,9 @@
  * file that was distributed with this source code.
  */
 
-declare(strict_types=1);
-
 namespace Daikon\RabbitMq3\Migration;
 
 use Daikon\Dbal\Migration\MigrationTrait;
-use GuzzleHttp\Exception\RequestException;
 
 trait RabbitMq3MigrationTrait
 {

@@ -1,12 +1,10 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * This file is part of the daikon-cqrs/rabbitmq3-adapter project.
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
-declare(strict_types=1);
 
 namespace Daikon\RabbitMq3\Job;
 
@@ -19,6 +17,7 @@ use Daikon\RabbitMq3\Connector\RabbitMq3Connector;
 use PhpAmqpLib\Channel\AMQPChannel;
 use PhpAmqpLib\Message\AMQPMessage;
 use Psr\Log\LoggerInterface;
+use RuntimeException;
 
 final class RabbitMq3Worker implements WorkerInterface
 {
@@ -85,7 +84,7 @@ final class RabbitMq3Worker implements WorkerInterface
 
         try {
             $this->messageBus->receive($envelope);
-        } catch (\Exception $error) {
+        } catch (RuntimeException $error) {
             $message = $envelope->getMessage();
             if ($job->getStrategy()->canRetry($envelope)) {
                 $retries = $metadata->get('_retries', 0);
