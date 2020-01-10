@@ -17,11 +17,9 @@ use PhpAmqpLib\Message\AMQPMessage;
 
 final class RabbitMq3Transport implements TransportInterface
 {
-    /** @var string */
-    private $key;
+    private string $key;
 
-    /** @var RabbitMq3Connector */
-    private $connector;
+    private RabbitMq3Connector $connector;
 
     public function __construct(string $key, RabbitMq3Connector $connector)
     {

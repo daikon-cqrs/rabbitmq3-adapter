@@ -16,11 +16,9 @@ use DateTimeImmutable;
 
 final class RabbitMq3MigrationAdapter implements MigrationAdapterInterface
 {
-    /** @var RabbitMq3AdminConnector */
-    private $connector;
+    private RabbitMq3AdminConnector $connector;
 
-    /** @var array */
-    private $settings;
+    private array $settings;
 
     public function __construct(RabbitMq3AdminConnector $connector, array $settings = [])
     {
@@ -33,9 +31,7 @@ final class RabbitMq3MigrationAdapter implements MigrationAdapterInterface
         $currentMigrations= $this->loadMigrations();
         $migrations = array_filter(
             $currentMigrations,
-            function (array $migration) use ($identifier): bool {
-                return $migration['routing_key'] === $identifier;
-            }
+            fn(array $migration): bool => $migration['routing_key'] === $identifier
         );
 
         return $this->createMigrationList($migrations);
@@ -48,6 +44,10 @@ final class RabbitMq3MigrationAdapter implements MigrationAdapterInterface
      */
     public function write(string $identifier, MigrationList $executedMigrations): void
     {
+        if ($executedMigrations->isEmpty()) {
+            return;
+        }
+
         $exchange = $this->settings['exchange'];
         $client = $this->connector->getConnection();
         $uri = sprintf('/api/bindings/%1$s/e/%2$s/e/%2$s', $this->getVhost(), $exchange);
@@ -76,7 +76,7 @@ final class RabbitMq3MigrationAdapter implements MigrationAdapterInterface
     {
         $uri = sprintf('/api/exchanges/%s/%s/bindings/source', $this->getVhost(), $this->settings['exchange']);
         $response = $this->connector->getConnection()->get($uri);
-        return json_decode($response->getBody()->getContents(), true);
+        return json_decode((string)$response->getBody(), true);
     }
 
     private function createMigrationList(array $migrationData): MigrationList

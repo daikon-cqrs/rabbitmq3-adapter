@@ -9,10 +9,12 @@
 namespace Daikon\RabbitMq3\Job;
 
 use Assert\Assertion;
+use Daikon\AsyncJob\Job\JobDefinitionInterface;
 use Daikon\AsyncJob\Job\JobDefinitionMap;
 use Daikon\AsyncJob\Worker\WorkerInterface;
 use Daikon\MessageBus\Envelope;
 use Daikon\MessageBus\MessageBusInterface;
+use Daikon\Metadata\MetadataInterface;
 use Daikon\RabbitMq3\Connector\RabbitMq3Connector;
 use PhpAmqpLib\Channel\AMQPChannel;
 use PhpAmqpLib\Message\AMQPMessage;
@@ -21,20 +23,15 @@ use RuntimeException;
 
 final class RabbitMq3Worker implements WorkerInterface
 {
-    /** @var RabbitMq3Connector */
-    private $connector;
+    private RabbitMq3Connector $connector;
 
-    /** @var MessageBusInterface */
-    private $messageBus;
+    private MessageBusInterface $messageBus;
 
-    /** @var JobDefinitionMap */
-    private $jobDefinitionMap;
+    private JobDefinitionMap $jobDefinitionMap;
 
-    /** @var LoggerInterface */
-    private $logger;
+    private LoggerInterface $logger;
 
-    /** @var array */
-    private $settings;
+    private array $settings;
 
     public function __construct(
         RabbitMq3Connector $connector,
@@ -80,7 +77,9 @@ final class RabbitMq3Worker implements WorkerInterface
         $jobName = (string)$metadata->get('job');
 
         Assertion::notBlank($jobName, 'Worker job name must not be blank.');
+        /** @var JobDefinitionInterface $job */
         $job = $this->jobDefinitionMap->get($jobName);
+        Assertion::isInstanceOf($job, JobDefinitionInterface::class, "Job definition '$jobName' not found");
 
         try {
             $this->messageBus->receive($envelope);
@@ -88,6 +87,7 @@ final class RabbitMq3Worker implements WorkerInterface
             $message = $envelope->getMessage();
             if ($job->getStrategy()->canRetry($envelope)) {
                 $retries = $metadata->get('_retries', 0);
+                /** @var MetadataInterface $metadata */
                 $metadata = $metadata
                     ->with('_retries', ++$retries)
                     ->with('_expiration', $job->getStrategy()->getRetryInterval($envelope));
