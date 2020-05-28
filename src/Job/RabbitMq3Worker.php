@@ -12,6 +12,7 @@ use Assert\Assertion;
 use Daikon\AsyncJob\Job\JobDefinitionInterface;
 use Daikon\AsyncJob\Job\JobDefinitionMap;
 use Daikon\AsyncJob\Worker\WorkerInterface;
+use Daikon\Interop\RuntimeException;
 use Daikon\MessageBus\Envelope;
 use Daikon\MessageBus\MessageBusInterface;
 use Daikon\Metadata\MetadataInterface;
@@ -19,7 +20,6 @@ use Daikon\RabbitMq3\Connector\RabbitMq3Connector;
 use PhpAmqpLib\Channel\AMQPChannel;
 use PhpAmqpLib\Message\AMQPMessage;
 use Psr\Log\LoggerInterface;
-use RuntimeException;
 
 final class RabbitMq3Worker implements WorkerInterface
 {
