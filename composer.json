@@ -14,6 +14,7 @@
         "daikon/dbal": "master@dev",
         "daikon/interop": "master@dev",
         "daikon/message-bus": "master@dev",
+        "guzzlehttp/guzzle": "^6.3",
         "php-amqplib/php-amqplib": "^v2.8"
     },
     "require-dev": {
