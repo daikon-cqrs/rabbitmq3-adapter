@@ -9,7 +9,6 @@
     "minimum-stability": "dev",
     "require": {
         "php": "^7.4",
-        "beberlei/assert": "^v3.0",
         "daikon/async-job": "master@dev",
         "daikon/dbal": "master@dev",
         "daikon/interop": "master@dev",

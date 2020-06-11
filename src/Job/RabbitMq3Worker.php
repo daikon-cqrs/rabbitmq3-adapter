@@ -8,10 +8,10 @@
 
 namespace Daikon\RabbitMq3\Job;
 
-use Assert\Assertion;
 use Daikon\AsyncJob\Job\JobDefinitionInterface;
 use Daikon\AsyncJob\Job\JobDefinitionMap;
 use Daikon\AsyncJob\Worker\WorkerInterface;
+use Daikon\Interop\Assertion;
 use Daikon\Interop\RuntimeException;
 use Daikon\MessageBus\Envelope;
 use Daikon\MessageBus\MessageBusInterface;
@@ -50,7 +50,7 @@ final class RabbitMq3Worker implements WorkerInterface
     public function run(array $parameters = []): void
     {
         $queue = $parameters['queue'];
-        Assertion::notBlank($queue);
+        Assertion::notBlank($queue, 'Queue name must not be blank.');
 
         $messageHandler = function (AMQPMessage $amqpMessage): void {
             $this->execute($amqpMessage);
@@ -79,7 +79,7 @@ final class RabbitMq3Worker implements WorkerInterface
         Assertion::notBlank($jobName, 'Worker job name must not be blank.');
         /** @var JobDefinitionInterface $job */
         $job = $this->jobDefinitionMap->get($jobName);
-        Assertion::isInstanceOf($job, JobDefinitionInterface::class, "Job definition '$jobName' not found");
+        Assertion::isInstanceOf($job, JobDefinitionInterface::class, "Job definition '$jobName' not found.");
 
         try {
             $this->messageBus->receive($envelope);
@@ -94,7 +94,7 @@ final class RabbitMq3Worker implements WorkerInterface
                 $this->messageBus->publish($message, (string)$metadata->get('_channel'), $metadata);
             } else {
                 //@todo add message/metadata to error context
-                $this->logger->error("Failed handling job '$jobName'", ['exception' => $error]);
+                $this->logger->error("Failed handling job '$jobName'.", ['exception' => $error]);
             }
         }
 

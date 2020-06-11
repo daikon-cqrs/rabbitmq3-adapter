@@ -8,7 +8,7 @@
 
 namespace Daikon\RabbitMq3\Transport;
 
-use Assert\Assertion;
+use Daikon\Interop\Assertion;
 use Daikon\MessageBus\Channel\Subscription\Transport\TransportInterface;
 use Daikon\MessageBus\EnvelopeInterface;
 use Daikon\MessageBus\MessageBusInterface;
@@ -33,8 +33,8 @@ final class RabbitMq3Transport implements TransportInterface
         $exchange = $metadata->get('exchange');
         $routingKey = $metadata->get('routing_key', '');
 
-        Assertion::notBlank($exchange);
-        Assertion::string($routingKey);
+        Assertion::notBlank($exchange, 'Exchange name must not be blank.');
+        Assertion::string($routingKey, 'Routing key must be a string.');
 
         $payload = json_encode($envelope->toNative());
         $properties = ['delivery_mode' => AMQPMessage::DELIVERY_MODE_PERSISTENT];
