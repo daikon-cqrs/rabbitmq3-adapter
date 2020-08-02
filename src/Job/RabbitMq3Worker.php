@@ -94,7 +94,7 @@ final class RabbitMq3Worker implements WorkerInterface
                 $this->messageBus->publish($message, (string)$metadata->get('_channel'), $metadata);
             } else {
                 //@todo add message/metadata to error context
-                $this->logger->error("Failed handling job '$jobName'.", ['exception' => $error]);
+                $this->logger->error($error->getMessage(), ['trace' => $error->getTrace()]);
             }
         }
 

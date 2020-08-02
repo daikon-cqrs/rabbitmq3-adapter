@@ -8,18 +8,16 @@
 
 namespace Daikon\RabbitMq3\Migration;
 
-use Daikon\Dbal\Migration\MigrationTrait;
+use Daikon\Dbal\Migration\Migration;
 
-trait RabbitMq3MigrationTrait
+abstract class RabbitMq3Migration extends Migration
 {
-    use MigrationTrait;
-
-    private function createMigrationList(string $exchange): void
+    protected function createMigrationList(string $exchange): void
     {
         $this->declareExchange($exchange, 'topic', false, true, false, true);
     }
 
-    private function createMessagePipeline(string $exchange, int $repubInterval = 30000): void
+    protected function createMessagePipeline(string $exchange, int $repubInterval = 30000): void
     {
         $waitExchange = $exchange.'.waiting';
         $waitQueue = $waitExchange;
@@ -50,7 +48,7 @@ trait RabbitMq3MigrationTrait
         $this->createShovel($repubExchange, $exchange, $repubQueue);
     }
 
-    private function deleteMessagePipeline(string $exchange): void
+    protected function deleteMessagePipeline(string $exchange): void
     {
         $waitExchange = $exchange.'.waiting';
         $waitQueue = $waitExchange;
@@ -69,7 +67,7 @@ trait RabbitMq3MigrationTrait
         $this->deleteQueue($repubQueue);
     }
 
-    private function declareExchange(
+    protected function declareExchange(
         string $exchange,
         string $type,
         bool $passive = false,
@@ -93,7 +91,7 @@ trait RabbitMq3MigrationTrait
         ]);
     }
 
-    private function bindExchange(
+    protected function bindExchange(
         string $source,
         string $dest,
         string $routingKey = '',
@@ -110,13 +108,13 @@ trait RabbitMq3MigrationTrait
         ]);
     }
 
-    private function deleteExchange(string $exchange): void
+    protected function deleteExchange(string $exchange): void
     {
         $uri = sprintf('/api/exchanges/%s/%s', $this->getVhost(), $exchange);
         $this->connector->getConnection()->delete($uri);
     }
 
-    private function declareQueue(
+    protected function declareQueue(
         string $queue,
         bool $passive = false,
         bool $durable = false,
@@ -138,7 +136,7 @@ trait RabbitMq3MigrationTrait
         ]);
     }
 
-    private function bindQueue(
+    protected function bindQueue(
         string $queue,
         string $exchange,
         string $routingKey = '',
@@ -155,13 +153,13 @@ trait RabbitMq3MigrationTrait
         ]);
     }
 
-    private function deleteQueue(string $queue): void
+    protected function deleteQueue(string $queue): void
     {
         $uri = sprintf('/api/queues/%s/%s', $this->getVhost(), $queue);
         $this->connector->getConnection()->delete($uri);
     }
 
-    private function createShovel(string $source, string $dest, string $queue): void
+    protected function createShovel(string $source, string $dest, string $queue): void
     {
         $uri = sprintf('/api/parameters/shovel/%s/%s.shovel', $this->getVhost(), $source);
         $this->connector->getConnection()->put($uri, [
@@ -179,13 +177,13 @@ trait RabbitMq3MigrationTrait
         ]);
     }
 
-    private function deleteShovel(string $exchange): void
+    protected function deleteShovel(string $exchange): void
     {
         $uri = sprintf('/api/parameters/shovel/%s/%s.shovel', $this->getVhost(), $exchange);
         $this->connector->getConnection()->delete($uri);
     }
 
-    private function getVhost(): string
+    protected function getVhost(): string
     {
         $connectorSettings = $this->connector->getSettings();
         return $connectorSettings['vhost'];
