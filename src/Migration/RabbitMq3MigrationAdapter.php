@@ -42,9 +42,9 @@ final class RabbitMq3MigrationAdapter implements MigrationAdapterInterface
      * we make use of internal exchange bindings with metadata as a way of tracking the migration state
      * of the messaging infrastructure.
      */
-    public function write(string $identifier, MigrationList $executedMigrations): void
+    public function write(string $identifier, MigrationList $migrationList): void
     {
-        if ($executedMigrations->isEmpty()) {
+        if ($migrationList->isEmpty()) {
             return;
         }
 
@@ -57,7 +57,7 @@ final class RabbitMq3MigrationAdapter implements MigrationAdapterInterface
             $client->delete($uri.'/'.$migration['properties_key']);
         }
 
-        foreach ($executedMigrations as $migration) {
+        foreach ($migrationList as $migration) {
             $client->post($uri, [
                 'body' => json_encode([
                     'routing_key' => $identifier,
