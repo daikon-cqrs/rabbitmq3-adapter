@@ -14,6 +14,7 @@ use Daikon\MessageBus\EnvelopeInterface;
 use Daikon\MessageBus\MessageBusInterface;
 use Daikon\RabbitMq3\Connector\RabbitMq3Connector;
 use PhpAmqpLib\Message\AMQPMessage;
+use PhpAmqpLib\Wire\AMQPTable;
 
 final class RabbitMq3Transport implements TransportInterface
 {
@@ -38,6 +39,9 @@ final class RabbitMq3Transport implements TransportInterface
 
         $payload = json_encode($envelope->toNative());
         $properties = ['delivery_mode' => AMQPMessage::DELIVERY_MODE_PERSISTENT];
+        if ($metadata->has('headers')) {
+            $properties['application_headers'] = new AMQPTable($metadata->get('headers'));
+        }
         if ($metadata->has('_expiration')) {
             $properties['expiration'] = $metadata->get('_expiration');
         }

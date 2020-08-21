@@ -9,12 +9,13 @@
 namespace Daikon\RabbitMq3\Migration;
 
 use Daikon\Dbal\Migration\Migration;
+use PhpAmqpLib\Exchange\AMQPExchangeType;
 
 abstract class RabbitMq3Migration extends Migration
 {
     protected function createMigrationList(string $exchange): void
     {
-        $this->declareExchange($exchange, 'topic', false, true, false, true);
+        $this->declareExchange($exchange, AMQPExchangeType::TOPIC, false, true, false, true);
     }
 
     protected function createMessagePipeline(string $exchange, int $repubInterval = 30000): void
@@ -27,10 +28,10 @@ abstract class RabbitMq3Migration extends Migration
         $repubQueue = $repubExchange;
 
         // Setup the default exchange and queue pipelines
-        $this->declareExchange($unroutedExchange, 'fanout', false, true, false, true); //internal
-        $this->declareExchange($repubExchange, 'fanout', false, true, false, true); //internal
-        $this->declareExchange($waitExchange, 'fanout', false, true, false);
-        $this->declareExchange($exchange, 'topic', false, true, false, false, false, [
+        $this->declareExchange($unroutedExchange, AMQPExchangeType::FANOUT, false, true, false, true); //internal
+        $this->declareExchange($repubExchange, AMQPExchangeType::FANOUT, false, true, false, true); //internal
+        $this->declareExchange($waitExchange, AMQPExchangeType::FANOUT, false, true, false);
+        $this->declareExchange($exchange, AMQPExchangeType::TOPIC, false, true, false, false, false, [
             'alternate-exchange' => $unroutedExchange
         ]);
         $this->declareQueue($waitQueue, false, true, false, false, false, [
