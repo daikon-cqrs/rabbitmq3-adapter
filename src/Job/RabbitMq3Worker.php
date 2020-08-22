@@ -70,6 +70,7 @@ final class RabbitMq3Worker implements WorkerInterface
     private function execute(AMQPMessage $amqpMessage): void
     {
         $deliveryInfo = $amqpMessage->delivery_info;
+        /** @var AMQPChannel $channel */
         $channel = $deliveryInfo['channel'];
         $deliveryTag = $deliveryInfo['delivery_tag'];
 
@@ -84,6 +85,7 @@ final class RabbitMq3Worker implements WorkerInterface
 
         try {
             $this->messageBus->receive($envelope);
+            $channel->basic_ack($deliveryTag);
         } catch (RuntimeException $error) {
             /** @var JobDefinitionInterface $job */
             $job = $this->jobDefinitionMap->get($jobKey);
@@ -97,8 +99,7 @@ final class RabbitMq3Worker implements WorkerInterface
                 //@todo add message/metadata to error context
                 $this->logger->error($error->getMessage(), ['exception' => $error->getTrace()]);
             }
+            $channel->basic_nack($deliveryTag, false, false);
         }
-
-        $channel->basic_ack($deliveryTag);
     }
 }
