@@ -18,56 +18,6 @@ abstract class RabbitMq3Migration extends Migration
         $this->declareExchange($exchange, AMQPExchangeType::TOPIC, false, true, false, true);
     }
 
-    protected function createMessagePipeline(string $exchange, int $repubInterval = 30000): void
-    {
-        $waitExchange = $exchange.'.waiting';
-        $waitQueue = $waitExchange;
-        $unroutedExchange = $exchange.'.unrouted';
-        $unroutedQueue = $unroutedExchange;
-        $repubExchange = $exchange.'.repub';
-        $repubQueue = $repubExchange;
-
-        // Setup the default exchange and queue pipelines
-        $this->declareExchange($unroutedExchange, AMQPExchangeType::FANOUT, false, true, false, true); //internal
-        $this->declareExchange($repubExchange, AMQPExchangeType::FANOUT, false, true, false, true); //internal
-        $this->declareExchange($waitExchange, AMQPExchangeType::FANOUT, false, true, false);
-        $this->declareExchange($exchange, AMQPExchangeType::TOPIC, false, true, false, false, false, [
-            'alternate-exchange' => $unroutedExchange
-        ]);
-        $this->declareQueue($waitQueue, false, true, false, false, false, [
-            'x-dead-letter-exchange' => $exchange
-        ]);
-        $this->bindQueue($waitQueue, $waitExchange);
-        $this->declareQueue($unroutedQueue, false, true, false, false, false, [
-            'x-dead-letter-exchange' => $repubExchange,
-            'x-message-ttl' => $repubInterval
-        ]);
-        $this->bindQueue($unroutedQueue, $unroutedExchange);
-        $this->declareQueue($repubQueue, false, true, false, false);
-        $this->bindQueue($repubQueue, $repubExchange);
-
-        $this->createShovel($repubExchange, $exchange, $repubQueue);
-    }
-
-    protected function deleteMessagePipeline(string $exchange): void
-    {
-        $waitExchange = $exchange.'.waiting';
-        $waitQueue = $waitExchange;
-        $unroutedExchange = $exchange.'.unrouted';
-        $unroutedQueue = $unroutedExchange;
-        $repubExchange = $exchange.'.repub';
-        $repubQueue = $repubExchange;
-
-        $this->deleteShovel($repubExchange);
-        $this->deleteExchange($waitExchange);
-        $this->deleteExchange($unroutedExchange);
-        $this->deleteExchange($repubExchange);
-        $this->deleteExchange($exchange);
-        $this->deleteQueue($waitQueue);
-        $this->deleteQueue($unroutedQueue);
-        $this->deleteQueue($repubQueue);
-    }
-
     protected function declareExchange(
         string $exchange,
         string $type,

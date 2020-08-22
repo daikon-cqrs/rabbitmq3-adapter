@@ -10,12 +10,13 @@ namespace Daikon\RabbitMq3\Job;
 
 use Daikon\AsyncJob\Job\JobDefinitionInterface;
 use Daikon\AsyncJob\Job\JobDefinitionMap;
+use Daikon\AsyncJob\Metadata\JobMetadataEnricher;
 use Daikon\AsyncJob\Worker\WorkerInterface;
 use Daikon\Interop\Assertion;
 use Daikon\Interop\RuntimeException;
+use Daikon\MessageBus\Channel\ChannelInterface;
 use Daikon\MessageBus\Envelope;
 use Daikon\MessageBus\MessageBusInterface;
-use Daikon\Metadata\MetadataInterface;
 use Daikon\RabbitMq3\Connector\RabbitMq3Connector;
 use PhpAmqpLib\Channel\AMQPChannel;
 use PhpAmqpLib\Message\AMQPMessage;
@@ -74,27 +75,27 @@ final class RabbitMq3Worker implements WorkerInterface
 
         $envelope = Envelope::fromNative(json_decode($amqpMessage->body, true));
         $metadata = $envelope->getMetadata();
-        $jobName = (string)$metadata->get('job');
 
-        Assertion::notBlank($jobName, 'Worker job name must not be blank.');
-        /** @var JobDefinitionInterface $job */
-        $job = $this->jobDefinitionMap->get($jobName);
-        Assertion::isInstanceOf($job, JobDefinitionInterface::class, "Job definition '$jobName' not found.");
+        $jobKey = (string)$metadata->get(JobMetadataEnricher::JOB);
+        Assertion::notBlank($jobKey, 'Job key must not be blank.');
+        if (!$this->jobDefinitionMap->has($jobKey)) {
+            throw new RuntimeException("Job definition '$jobKey' not found.");
+        }
 
         try {
             $this->messageBus->receive($envelope);
         } catch (RuntimeException $error) {
-            $message = $envelope->getMessage();
+            /** @var JobDefinitionInterface $job */
+            $job = $this->jobDefinitionMap->get($jobKey);
             if ($job->getStrategy()->canRetry($envelope)) {
-                $retries = $metadata->get('_retries', 0);
-                /** @var MetadataInterface $metadata */
-                $metadata = $metadata
-                    ->with('_retries', ++$retries)
-                    ->with('_expiration', $job->getStrategy()->getRetryInterval($envelope));
-                $this->messageBus->publish($message, (string)$metadata->get('_channel'), $metadata);
+                $this->messageBus->publish(
+                    $envelope->getMessage(),
+                    (string)$metadata->get(ChannelInterface::METADATA_KEY),
+                    $metadata
+                );
             } else {
                 //@todo add message/metadata to error context
-                $this->logger->error($error->getMessage(), ['trace' => $error->getTrace()]);
+                $this->logger->error($error->getMessage(), ['exception' => $error->getTrace()]);
             }
         }
 
