@@ -51,11 +51,12 @@ final class RabbitMq3Transport implements TransportInterface
         if ($metadata->has(self::EXPIRATION)) {
             $properties['expiration'] = $metadata->get(self::EXPIRATION);
         }
-        $message = new AMQPMessage($payload, $properties);
+
+        $amqpMessage = new AMQPMessage($payload, $properties);
 
         /** @var AMQPChannel $channel */
         $channel = $this->connector->getConnection()->channel();
-        $channel->basic_publish($message, $exchange, $routingKey);
+        $channel->basic_publish($amqpMessage, $exchange, $routingKey);
     }
 
     public function getKey(): string
